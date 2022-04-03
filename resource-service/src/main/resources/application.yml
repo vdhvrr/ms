@@ -1,0 +1,24 @@
+server:
+  port: 8081
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/resources
+    username: postgres
+    password: admin
+    driver-class-name: org.postgresql.Driver
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+spring.jpa:
+  database: POSTGRESQL
+  hibernate.ddl-auto: update
+  show-sql: true
+
+s3:
+  service-endpoint: http://localhost:9444
+  access-key-id: AKIAIOSFODNN7EXAMPLE
+  key-secret: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+  bucket-name: test

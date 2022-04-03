@@ -1,0 +1,14 @@
+server:
+  port: 8082
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/songs
+    username: postgres
+    password: admin
+    driver-class-name: org.postgresql.Driver
+
+spring.jpa:
+  database: POSTGRESQL
+  hibernate.ddl-auto: update
+  show-sql: true
