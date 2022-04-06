@@ -1,10 +1,12 @@
 package com.epam.ms.resource.controller;
 
+import com.epam.ms.resource.model.Resource;
 import com.epam.ms.resource.service.ResourceService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -20,8 +22,8 @@ public class ResourceController {
 
   @PostMapping
   public ResponseEntity<Map<String, Long>> createResource(@RequestParam MultipartFile file) {
-    Map<String, Long> created = resourceService.saveAudioFile(file);
-    return ResponseEntity.ok(created);
+    Resource resource = resourceService.saveAudioFile(file);
+    return ResponseEntity.ok(Collections.singletonMap("id", resource.getId()));
   }
 
   @GetMapping("{id}")

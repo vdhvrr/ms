@@ -11,6 +11,14 @@ spring:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
+  rabbitmq:
+    host: localhost
+    password: guest
+    port: 15672
+    username: guest
+    exchange: resource.exchange
+    queue: resource.queue
+    routing-key: resource.routingkey
 
 spring.jpa:
   database: POSTGRESQL
