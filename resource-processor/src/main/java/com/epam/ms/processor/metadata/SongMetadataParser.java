@@ -26,7 +26,7 @@ public class SongMetadataParser {
             new ParseContext());
 
     return Map.of(
-        null,
+        "name",
         metadata.get(TikaCoreProperties.TITLE),
         "artist",
         metadata.get(TikaCoreProperties.CREATOR),
