@@ -16,33 +16,39 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ResourceServiceImpl implements ResourceService {
 
   private final ResourceRepository resourceRepository;
   private final AmazonS3 s3Client;
+  private final RabbitMQSender rabbitMqSender;
 
   @Value("${s3.bucket-name}")
   private String bucketName;
 
-  public ResourceServiceImpl(ResourceRepository resourceRepository, AmazonS3 s3Client) {
+  public ResourceServiceImpl(
+      ResourceRepository resourceRepository, AmazonS3 s3Client, RabbitMQSender rabbitMqSender) {
     this.resourceRepository = resourceRepository;
     this.s3Client = s3Client;
+    this.rabbitMqSender = rabbitMqSender;
   }
 
   @Override
-  public Map<String, Long> saveAudioFile(MultipartFile multipartFile) {
+  public Resource saveAudioFile(MultipartFile multipartFile) {
     File file = convertMultipartToFile(multipartFile);
     if (file == null) {
       throw new ResourceException("Could not save file.");
     }
 
     s3Client.putObject(bucketName, multipartFile.getOriginalFilename(), file);
+    Resource savedResource = resourceRepository.save(new Resource(file.getName()));
+    rabbitMqSender.send(savedResource);
 
-    long id = resourceRepository.save(new Resource(file.getName())).getId();
-    return Collections.singletonMap("id", id);
+    return savedResource;
   }
 
   @Override

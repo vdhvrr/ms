@@ -6,3 +6,27 @@ spring:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
+  codec:
+    max-in-memory-size: 100MB
+  rabbitmq:
+    host: localhost
+    password: guest
+    port: 15672
+    username: guest
+    exchange: resource.exchange
+    queue: resource.queue
+    routing-key: resource.routingkey
+    listener:
+      simple:
+        retry:
+          enabled: true
+          max-attempts: 2
+          max-interval: 100
+
+api:
+  resource-url: http://localhost:8081/resources/
+  song-url: http://localhost:8082/songs/
+
+retry:
+  maxAttempts: 2
+  maxDelay: 100

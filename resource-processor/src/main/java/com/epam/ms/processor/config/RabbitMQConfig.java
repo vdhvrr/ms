@@ -1,10 +1,6 @@
-package com.epam.ms.resource;
+package com.epam.ms.processor.config;
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.client.builder.AwsClientBuilder;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -15,19 +11,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class ResourceServiceAppConfig {
+public class RabbitMQConfig {
 
-  @Value("${s3.access-key-id}")
-  private String accessKeyId;
+  @Value("${spring.rabbitmq.queue}")
+  private String queue;
 
-  @Value("${s3.key-secret}")
-  private String accessKeySecret;
+  @Value("${spring.rabbitmq.exchange}")
+  private String exchange;
 
-  @Value("${s3.service-endpoint}")
-  private String serviceEndpoint;
-
-  @Value("${spring.rabbitmq.host}")
-  private String host;
+  @Value("${spring.rabbitmq.routing-key}")
+  private String routingKey;
 
   @Value("${spring.rabbitmq.username}")
   private String username;
@@ -35,19 +28,26 @@ public class ResourceServiceAppConfig {
   @Value("${spring.rabbitmq.password}")
   private String password;
 
+  @Value("${spring.rabbitmq.host}")
+  private String host;
+
   @Bean
-  public AmazonS3 s3Client() {
-    return AmazonS3ClientBuilder.standard()
-        .withCredentials(
-            new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKeyId, accessKeySecret)))
-        .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(serviceEndpoint, ""))
-        .enablePathStyleAccess()
-        .disableChunkedEncoding()
-        .build();
+  public Queue queue() {
+    return new Queue(queue, false);
   }
 
   @Bean
-  public CachingConnectionFactory connectionFactory() {
+  public Exchange myExchange() {
+    return ExchangeBuilder.directExchange(exchange).build();
+  }
+
+  @Bean
+  public Binding binding() {
+    return BindingBuilder.bind(queue()).to(myExchange()).with(routingKey).noargs();
+  }
+
+  @Bean
+  public ConnectionFactory connectionFactory() {
     CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(host);
     cachingConnectionFactory.setUsername(username);
     cachingConnectionFactory.setPassword(password);
@@ -61,7 +61,7 @@ public class ResourceServiceAppConfig {
 
   @Bean
   public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
-    RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+    final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
     rabbitTemplate.setMessageConverter(jsonMessageConverter());
     return rabbitTemplate;
   }
