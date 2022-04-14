@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/songs
+    url: jdbc:postgresql://${DB_HOST:localhost:5432}/songs
     username: postgres
     password: admin
     driver-class-name: org.postgresql.Driver

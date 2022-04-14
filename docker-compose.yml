@@ -1,0 +1,59 @@
+version: "3.9"
+services:
+  resource-service:
+    build:
+      context: ./resource-service
+      dockerfile: ./Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      RABBIT_HOST: rabbitmq
+      DB_HOST: postgresqldb
+      S3_HOST: ninja
+    depends_on:
+      - resource-processor
+      - rabbitmq
+      - postgresqldb
+      - ninja
+  song-service:
+    build:
+      context: ./song-service
+      dockerfile: ./Dockerfile
+    ports:
+      - "8082:8082"
+    environment:
+      DB_HOST: postgresqldb
+    depends_on:
+      - postgresqldb
+  resource-processor:
+    build:
+      context: ./resource-processor
+      dockerfile: ./Dockerfile
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RESOURCE_SERVICE_URL: http://resource-service:8081
+      SONG_SERVICE_URL: http://song-service:8082
+    depends_on:
+      - song-service
+      - rabbitmq
+  postgresqldb:
+    image: postgres
+    build:
+      context: ./
+      dockerfile: Dockerfile.postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_USER=postgres
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  ninja:
+    image: scireum/s3-ninja
+    ports:
+      - "9444:9000"
+    tmpfs:
+      - "/home/sirius/data/${BUCKET_NAME}/:uid=2000,gid=2000"
