@@ -21,8 +21,8 @@ spring:
           max-interval: 100
 
 api:
-  resource-url: ${RESOURCE_SERVICE_URL:http://localhost:8081/resources/}
-  song-url: ${SONG_SERIVE_URL:http://localhost:8082/songs/}
+  resource-url: ${RESOURCE_SERVICE_URL:http://localhost:8081}/resources/
+  song-url: ${SONG_SERVICE_URL:http://localhost:8082}/songs/
 
 retry:
   maxAttempts: 2
