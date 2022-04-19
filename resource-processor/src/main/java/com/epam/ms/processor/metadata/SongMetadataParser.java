@@ -6,7 +6,7 @@ import org.apache.tika.metadata.XMPDM;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.mp3.Mp3Parser;
 import org.apache.tika.sax.BodyContentHandler;
-import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -14,7 +14,7 @@ import java.util.Map;
 @Component
 public class SongMetadataParser {
 
-  public Map<String, String> parseSongMetadata(String resourceId, ByteArrayResource songBytesArray)
+  public Map<String, String> parseSongMetadata(String resourceId, Resource songBytesArray)
       throws Exception {
 
     Metadata metadata = new Metadata();

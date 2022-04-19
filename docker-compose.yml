@@ -11,11 +11,14 @@ services:
       DB_HOST: postgresqldb
       S3_HOST: ninja
       S3_PORT: 9000
+      EUREKA_ZONE: http://eureka:8761/eureka
+      API_GATEWAY: api-gateway
     depends_on:
       - resource-processor
       - rabbitmq
       - postgresqldb
       - ninja
+      - eureka
   song-service:
     build:
       context: ./song-service
@@ -24,19 +27,21 @@ services:
       - "${SONG_SERVICE_PORT}:${SONG_SERVICE_PORT}"
     environment:
       DB_HOST: postgresqldb
+      EUREKA_ZONE: http://eureka:8761/eureka
     depends_on:
       - postgresqldb
+      - eureka
   resource-processor:
     build:
       context: ./resource-processor
       dockerfile: ./Dockerfile
     environment:
       RABBITMQ_HOST: rabbitmq
-      RESOURCE_SERVICE_URL: http://resource-service:8081
-      SONG_SERVICE_URL: http://song-service:8082
+      EUREKA_ZONE: http://eureka:8761/eureka
     depends_on:
       - song-service
       - rabbitmq
+      - api-gateway
   postgresqldb:
     image: postgres
     build:
@@ -58,3 +63,19 @@ services:
       - "9444:9000"
     tmpfs:
       - "/home/sirius/data/${BUCKET_NAME}/:uid=2000,gid=2000"
+  eureka:
+    build:
+      context: ./eureka-server/.
+      dockerfile: ./Dockerfile
+    ports:
+      - "8761:8761"
+  api-gateway:
+    build:
+      context: ./api-gateway/.
+      dockerfile: ./Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      EUREKA_ZONE: http://eureka:8761/eureka
+    depends_on:
+      - eureka
