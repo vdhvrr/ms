@@ -26,7 +26,7 @@ spring.jpa:
   show-sql: true
 
 s3:
-  service-endpoint: http://${S3_HOST:localhost}:9444/s3
+  service-endpoint: http://${S3_HOST:localhost}:${S3_PORT:9444}/s3
   access-key-id: AKIAIOSFODNN7EXAMPLE
   key-secret: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
   bucket-name: ${BUCKET_NAME:test}

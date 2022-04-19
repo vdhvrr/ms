@@ -5,11 +5,12 @@ services:
       context: ./resource-service
       dockerfile: ./Dockerfile
     ports:
-      - "8081:8081"
+      - "${RESOURCE_SERVICE_PORT}:${RESOURCE_SERVICE_PORT}"
     environment:
-      RABBIT_HOST: rabbitmq
+      RABBITMQ_HOST: rabbitmq
       DB_HOST: postgresqldb
       S3_HOST: ninja
+      S3_PORT: 9000
     depends_on:
       - resource-processor
       - rabbitmq
@@ -20,7 +21,7 @@ services:
       context: ./song-service
       dockerfile: ./Dockerfile
     ports:
-      - "8082:8082"
+      - "${SONG_SERVICE_PORT}:${SONG_SERVICE_PORT}"
     environment:
       DB_HOST: postgresqldb
     depends_on:

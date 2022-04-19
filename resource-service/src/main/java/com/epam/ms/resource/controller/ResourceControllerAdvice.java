@@ -2,6 +2,8 @@ package com.epam.ms.resource.controller;
 
 import com.epam.ms.resource.exception.ResourceException;
 import com.epam.ms.resource.exception.ResourceNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -16,6 +18,8 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class ResourceControllerAdvice {
 
+  private final Logger logger = LoggerFactory.getLogger(ResourceControllerAdvice.class);
+
   @ExceptionHandler(ResourceException.class)
   public ResponseEntity<String> badRequest(ResourceException ex) {
     return ResponseEntity.badRequest().body(ex.getMessage());
@@ -28,6 +32,7 @@ public class ResourceControllerAdvice {
 
   @ExceptionHandler(RuntimeException.class)
   public ResponseEntity<String> internalError(RuntimeException ex) {
+    logger.error("Internal error: ", ex);
     return ResponseEntity.internalServerError().body("Internal error");
   }
 
