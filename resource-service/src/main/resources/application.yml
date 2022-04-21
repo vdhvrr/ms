@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/resources
+    url: jdbc:postgresql://${DB_HOST:localhost:5432}/resources
     username: postgres
     password: admin
     driver-class-name: org.postgresql.Driver
@@ -12,7 +12,7 @@ spring:
       max-file-size: 100MB
       max-request-size: 100MB
   rabbitmq:
-    host: localhost
+    host: ${RABBITMQ_HOST:localhost}
     password: guest
     port: 15672
     username: guest
@@ -26,7 +26,7 @@ spring.jpa:
   show-sql: true
 
 s3:
-  service-endpoint: http://localhost:9444
+  service-endpoint: http://${S3_HOST:localhost}:${S3_PORT:9444}/s3
   access-key-id: AKIAIOSFODNN7EXAMPLE
   key-secret: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
-  bucket-name: test
+  bucket-name: ${BUCKET_NAME:test}
