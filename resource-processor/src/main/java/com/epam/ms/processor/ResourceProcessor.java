@@ -1,10 +1,11 @@
 package com.epam.ms.processor;
 
-import com.epam.ms.processor.client.ResourceAPIClient;
-import com.epam.ms.processor.client.SongAPIClient;
+import com.epam.ms.processor.client.APIClient;
 import com.epam.ms.processor.metadata.SongMetadataParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -12,23 +13,24 @@ import java.util.Map;
 @Component
 public class ResourceProcessor {
 
-  private final ResourceAPIClient resourceAPI;
-  private final SongAPIClient songAPI;
+  private final Logger logger = LoggerFactory.getLogger(ResourceProcessor.class);
+
+  private final APIClient apiClient;
   private final SongMetadataParser metadataParser;
 
-  public ResourceProcessor(
-      ResourceAPIClient resourceAPIClient,
-      SongMetadataParser metadataParser,
-      SongAPIClient songAPIClient) {
-    this.resourceAPI = resourceAPIClient;
+  public ResourceProcessor(SongMetadataParser metadataParser, APIClient apiClient) {
     this.metadataParser = metadataParser;
-    this.songAPI = songAPIClient;
+    this.apiClient = apiClient;
   }
 
   @RabbitListener(queues = "${spring.rabbitmq.queue}")
-  public void receiveMessage(String resourceId) throws Exception {
-    ByteArrayResource resource = resourceAPI.retrieveSongBytes(resourceId);
-    Map<String, String> metadataList = metadataParser.parseSongMetadata(resourceId, resource);
-    songAPI.saveSongMetadata(metadataList);
+  public void receiveMessage(String resourceId) {
+    try {
+      Resource resource = apiClient.retrieveSongBytes(resourceId);
+      Map<String, String> metadataList = metadataParser.parseSongMetadata(resourceId, resource);
+      apiClient.saveSongMetadata(metadataList);
+    } catch (Exception ex) {
+      logger.error("receiveMessage error: ", ex);
+    }
   }
 }
