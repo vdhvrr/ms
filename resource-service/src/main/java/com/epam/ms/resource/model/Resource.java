@@ -14,6 +14,8 @@ public class Resource {
 
   @Column private String name;
 
+  @Column private Long storageId;
+
   public Resource() {}
 
   public Resource(String name) {
@@ -34,5 +36,13 @@ public class Resource {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public Long getStorageId() {
+    return storageId;
+  }
+
+  public void setStorageId(Long storageId) {
+    this.storageId = storageId;
   }
 }

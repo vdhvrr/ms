@@ -31,6 +31,18 @@ services:
     depends_on:
       - postgresqldb
       - eureka
+  storage-service:
+    build:
+      context: ./storage-service
+      dockerfile: ./Dockerfile
+    ports:
+      - "${STORAGE_SERVICE_PORT}:${STORAGE_SERVICE_PORT}"
+    environment:
+      DB_HOST: postgresqldb
+      EUREKA_ZONE: http://eureka:8761/eureka
+    depends_on:
+      - postgresqldb
+      - eureka
   resource-processor:
     build:
       context: ./resource-processor

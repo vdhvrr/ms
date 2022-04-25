@@ -40,3 +40,7 @@ eureka:
   instance:
     appname: resource-service
     preferIpAddress: true
+
+retry:
+  maxAttempts: 2
+  maxDelay: 100

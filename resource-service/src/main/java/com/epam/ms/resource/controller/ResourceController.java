@@ -32,6 +32,12 @@ public class ResourceController {
     return ResponseEntity.ok(resource);
   }
 
+  @PutMapping("/{id}/actions/move-to-permanent")
+  public ResponseEntity<?> moveToPermanent(@PathVariable long id) {
+    resourceService.moveToPermanentStorage(id);
+    return ResponseEntity.noContent().build();
+  }
+
   @DeleteMapping
   public ResponseEntity<Map<String, List<Long>>> deleteResource(
       @RequestParam(name = "id") List<Long> ids) {

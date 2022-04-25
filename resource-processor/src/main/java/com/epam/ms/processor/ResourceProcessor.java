@@ -29,6 +29,7 @@ public class ResourceProcessor {
       Resource resource = apiClient.retrieveSongBytes(resourceId);
       Map<String, String> metadataList = metadataParser.parseSongMetadata(resourceId, resource);
       apiClient.saveSongMetadata(metadataList);
+      apiClient.moveToPermanentStorage(resourceId);
     } catch (Exception ex) {
       logger.error("receiveMessage error: ", ex);
     }

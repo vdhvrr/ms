@@ -9,6 +9,8 @@ public interface ResourceService {
 
   Resource saveAudioFile(MultipartFile file);
 
+  void moveToPermanentStorage(long id);
+
   org.springframework.core.io.Resource getResource(long id);
 
   List<Long> deleteResources(List<Long> ids);

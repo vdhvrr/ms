@@ -23,3 +23,7 @@ spring:
           uri: lb://SONG-SERVICE
           predicates:
             - Path=/songs/**
+        - id: storageModule
+          uri: lb://STORAGE-SERVICE
+          predicates:
+            - Path=/storages/**
