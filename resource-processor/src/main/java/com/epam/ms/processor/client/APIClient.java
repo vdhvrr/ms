@@ -7,6 +7,7 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 import java.util.Map;
 
@@ -14,11 +15,18 @@ import java.util.Map;
 public interface APIClient {
 
   @Retryable(
-          value = Exception.class,
-          maxAttemptsExpression = "${retry.maxAttempts}",
-          backoff = @Backoff(delayExpression = "${retry.maxDelay}"))
+      value = Exception.class,
+      maxAttemptsExpression = "${retry.maxAttempts}",
+      backoff = @Backoff(delayExpression = "${retry.maxDelay}"))
   @GetMapping("/resources/{id}")
   Resource retrieveSongBytes(@PathVariable("id") String id);
+
+  @Retryable(
+      value = Exception.class,
+      maxAttemptsExpression = "${retry.maxAttempts}",
+      backoff = @Backoff(delayExpression = "${retry.maxDelay}"))
+  @PutMapping("/resources/{id}/actions/move-to-permanent")
+  void moveToPermanentStorage(@PathVariable("id") String id);
 
   @Retryable(
       value = Exception.class,
