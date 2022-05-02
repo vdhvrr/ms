@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: resource-processor
   servlet:
     multipart:
       max-file-size: 100MB
@@ -31,3 +33,15 @@ eureka:
   instance:
     appname: resource-processor
     preferIpAddress: true
+
+management:
+  metrics:
+    export:
+      elastic:
+        host: ${ELASTIC:http://localhost:9200}
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  security:
+    enabled: false
