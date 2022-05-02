@@ -44,11 +44,11 @@ services:
     environment:
       DB_HOST: postgresqldb
       EUREKA_ZONE: http://eureka:8761/eureka
+      AUTH_SERVER: http://auth-server:${AUTH_SERVER_PORT}/api/auth/user
     depends_on:
       - postgresqldb
       - eureka
-    labels:
-      collect_logs_with_filebeat: "true"
+      - auth-server
   resource-processor:
     build:
       context: ./resource-processor
@@ -137,3 +137,9 @@ services:
     restart: on-failure
     depends_on:
       - logstash
+  auth-server:
+    build:
+      context: ./auth-server
+      dockerfile: ./Dockerfile
+    ports:
+      - "${AUTH_SERVER_PORT}:${AUTH_SERVER_PORT}"

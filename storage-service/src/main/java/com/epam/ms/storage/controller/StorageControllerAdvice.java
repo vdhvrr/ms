@@ -2,7 +2,9 @@ package com.epam.ms.storage.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -26,7 +28,7 @@ public class StorageControllerAdvice {
   @ExceptionHandler(RuntimeException.class)
   public ResponseEntity<String> internalError(RuntimeException ex) {
     logger.error("Internal error: ", ex);
-    return ResponseEntity.internalServerError().body("Internal error");
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal error");
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -38,5 +40,10 @@ public class StorageControllerAdvice {
                     FieldError::getField,
                     e -> Optional.ofNullable(e.getDefaultMessage()).orElse("Validation error")));
     return ResponseEntity.badRequest().body(errors);
+  }
+
+  @ExceptionHandler(AccessDeniedException.class)
+  public ResponseEntity<String> argumentMismatch(AccessDeniedException ex) {
+    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
   }
 }

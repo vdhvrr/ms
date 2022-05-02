@@ -1,0 +1,14 @@
+server:
+  port: 8084
+  servlet:
+    context-path: /api/auth
+
+security:
+  oauth2:
+    client:
+      client-id: my-client-id
+      client-secret: my-client-secret
+      scope: read,write
+      authorized-grant-types: authorization,password,refresh_token,password,client_credentials
+
+

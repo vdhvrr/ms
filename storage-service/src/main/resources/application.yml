@@ -1,6 +1,11 @@
 server:
   port: 8083
 
+security:
+  oauth2:
+    resource:
+      user-info-uri: ${AUTH_SERVER:http://localhost:8085/api/auth/user}
+
 spring:
   application:
     name: storage-service
@@ -22,15 +27,3 @@ eureka:
   instance:
     appname: storage-serivice
     preferIpAddress: true
-
-management:
-  metrics:
-    export:
-      elastic:
-        host: ${ELASTIC:http://localhost:9200}
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  security:
-    enabled: false
