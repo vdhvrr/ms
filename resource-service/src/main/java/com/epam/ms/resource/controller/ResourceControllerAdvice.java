@@ -33,7 +33,7 @@ public class ResourceControllerAdvice {
   @ExceptionHandler(RuntimeException.class)
   public ResponseEntity<String> internalError(RuntimeException ex) {
     logger.error("Internal error: ", ex);
-    return ResponseEntity.internalServerError().body("Internal error");
+    return ResponseEntity.internalServerError().body("Internal error: "+ ex.getMessage());
   }
 
   @ExceptionHandler(MethodArgumentTypeMismatchException.class)

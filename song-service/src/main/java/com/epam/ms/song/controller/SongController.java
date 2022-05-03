@@ -29,7 +29,7 @@ public class SongController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<Song> get(@PathVariable Long id) {
+  public ResponseEntity<Song> get(@PathVariable("id") Long id) {
     Song song = songRepository.findById(id).orElseThrow(SongNotFoundException::new);
     return ResponseEntity.ok(song);
   }

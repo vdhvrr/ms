@@ -28,6 +28,33 @@ public class Song {
 
   public Song() {}
 
+  public Song(
+      String name, String artist, String album, String length, Integer year, Long resourceId) {
+    this.name = name;
+    this.artist = artist;
+    this.album = album;
+    this.length = length;
+    this.year = year;
+    this.resourceId = resourceId;
+  }
+
+  public Song(
+      Long id,
+      String name,
+      String artist,
+      String album,
+      String length,
+      Integer year,
+      Long resourceId) {
+    this.id = id;
+    this.name = name;
+    this.artist = artist;
+    this.album = album;
+    this.length = length;
+    this.year = year;
+    this.resourceId = resourceId;
+  }
+
   public Long getId() {
     return id;
   }
