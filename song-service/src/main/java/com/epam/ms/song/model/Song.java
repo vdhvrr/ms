@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 @Entity
 public class Song {
@@ -109,5 +110,28 @@ public class Song {
 
   public void setResourceId(Long resourceId) {
     this.resourceId = resourceId;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Song song = (Song) o;
+    return Objects.equals(id, song.id)
+        && Objects.equals(name, song.name)
+        && Objects.equals(artist, song.artist)
+        && Objects.equals(album, song.album)
+        && Objects.equals(length, song.length)
+        && Objects.equals(year, song.year)
+        && Objects.equals(resourceId, song.resourceId);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, name, artist, album, length, year, resourceId);
   }
 }
