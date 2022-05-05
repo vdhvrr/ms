@@ -3,6 +3,7 @@ package com.epam.ms.storage.controller;
 import com.epam.ms.storage.model.Storage;
 import com.epam.ms.storage.repository.StorageRepository;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +26,7 @@ public class StorageController {
   }
 
   @PostMapping
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<Map<String, Long>> create(@RequestBody @Valid Storage storage) {
     Storage createdStorage = storageRepository.save(storage);
     return ResponseEntity.ok(Collections.singletonMap("id", createdStorage.getId()));
@@ -41,10 +43,11 @@ public class StorageController {
   }
 
   @DeleteMapping
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<Map<String, Collection<Long>>> delete(@RequestParam("id") List<Long> ids) {
     List<Long> existingStoragesIds =
         ids.stream().filter(storageRepository::existsById).collect(Collectors.toList());
-    storageRepository.deleteAllById(existingStoragesIds);
+    existingStoragesIds.forEach(storageRepository::deleteById);
     return ResponseEntity.ok(Collections.singletonMap("ids", existingStoragesIds));
   }
 }
