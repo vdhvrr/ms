@@ -28,7 +28,7 @@ public class SongControllerAdvice {
 
   @ExceptionHandler(RuntimeException.class)
   public ResponseEntity<String> internalError(RuntimeException ex) {
-    return ResponseEntity.internalServerError().body("Internal error");
+    return ResponseEntity.internalServerError().body("Internal error: " + ex.getMessage());
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)

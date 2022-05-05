@@ -21,7 +21,7 @@ public class ResourceController {
   }
 
   @PostMapping
-  public ResponseEntity<Map<String, Long>> createResource(@RequestParam MultipartFile file) {
+  public ResponseEntity<Map<String, Long>> createResource(@RequestParam("file") MultipartFile file) {
     Resource resource = resourceService.saveAudioFile(file);
     return ResponseEntity.ok(Collections.singletonMap("id", resource.getId()));
   }

@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost:5432}/resources
+    username: postgres
+    password: admin
+    driver-class-name: org.postgresql.Driver
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    password: guest
+    port: 15672
+    username: guest
+    exchange: resource.exchange
+    queue: resource.queue
+    routing-key: resource.routingkey
+s3:
+  service-endpoint: http://${S3_HOST:localhost}:${S3_PORT:9444}/s3
+  access-key-id: AKIAIOSFODNN7EXAMPLE
+  key-secret: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+  bucket-name: ${BUCKET_NAME:test}
